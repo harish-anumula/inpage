@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attention, step by step</title>
+<link rel="stylesheet" href="../extension/lib/katex/katex.min.css">
+<script src="../extension/lib/katex/katex.min.js"></script>
+<style>
+  :root { --text:#1d1d1f; --muted:#6e6e73; --rule:#e5e5ea; --accent:#0a66c2; }
+  body { margin:0; background:#fbfbfa; color:var(--text); font:19px/1.7 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  header.site { border-bottom:1px solid var(--rule); background:#fff; }
+  header.site div { max-width:44rem; margin:0 auto; padding:14px 20px; font:600 15px system-ui, sans-serif; letter-spacing:-.01em; }
+  header.site span { color:var(--muted); font-weight:400; margin-left:8px; }
+  main { max-width:44rem; margin:0 auto; padding:2.5rem 20px 6rem; }
+  h1 { font:700 2.3rem/1.15 system-ui, sans-serif; letter-spacing:-.025em; margin:0 0 .4rem; }
+  .dek { color:var(--muted); font-size:1.15rem; margin:0 0 2rem; }
+  h2 { font:650 1.35rem/1.3 system-ui, sans-serif; letter-spacing:-.01em; margin:2.6rem 0 .6rem; }
+  p { margin:0 0 1.1rem; }
+  figure { margin:2rem 0; }
+  figure img { display:block; width:100%; height:auto; background:#fff; border:1px solid var(--rule); border-radius:10px; }
+  figcaption { font:14px/1.5 system-ui, sans-serif; color:var(--muted); margin-top:.6rem; }
+  pre { background:#f2f2f0; border-radius:10px; padding:16px 18px; overflow:auto; font:14.5px/1.55 ui-monospace, "SF Mono", Menlo, monospace; }
+  code { font-family:ui-monospace, "SF Mono", Menlo, monospace; font-size:.88em; }
+  .note { border-left:3px solid var(--accent); padding-left:1rem; color:#3a3a3c; }
+</style>
+</head>
+<body>
+<header class="site"><div>Learning notes<span>· Transformers, slowly</span></div></header>
+<main>
+  <h1>Attention, step by step</h1>
+  <p class="dek">How a transformer decides which earlier words matter, in one formula and a small picture.</p>
+
+  <h2>The idea</h2>
+  <p>Every token in a sequence asks a question of every other token: how relevant are you to me right now? Attention turns those questions into weights, then mixes the tokens' information using those weights. The result is a new vector for each token that blends in what it needs from the rest of the sequence.</p>
+
+  <h2>The formula</h2>
+  <p>Each token is projected into a query \(q\), a key \(k\) and a value \(v\). Stacking them for all tokens gives matrices \(Q\), \(K\) and \(V\), and attention is</p>
+  <p>\[ \mathrm{Attention}(Q, K, V) = \mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right) V \]</p>
+  <p>The scores \(QK^{\top}\) measure how well each query matches each key. Dividing by \(\sqrt{d_k}\) keeps the scores from growing with the key dimension \(d_k\), which would push the softmax into near one-hot outputs and make gradients vanish. The softmax turns each row of scores into weights that sum to one.</p>
+
+  <figure>
+    <img src="attention.svg" width="640" height="260" alt="Attention weights for the sentence 'the cat sat down': each row is a query token; darker cells mean more weight; 'sat' attends mostly to 'cat'.">
+    <figcaption>Figure 1. Causal attention weights for "the cat sat down": each token can only attend to itself and earlier tokens.</figcaption>
+  </figure>
+
+  <h2>Multiple heads</h2>
+  <p>One attention pattern can only capture one kind of relationship at a time. Multi-head attention runs \(h\) attention functions in parallel on smaller projections, \(d_k = d_{\text{model}}/h\), and concatenates their outputs, so one head can track syntax while another tracks coreference.</p>
+  <p class="note">The cost of attention grows with the square of the sequence length, \(O(n^2 d)\), because every token scores every other token.</p>
+
+  <h2>In code</h2>
+<pre><code>import torch, math
+
+def attention(q, k, v, causal=True):
+    scores = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
+    if causal:
+        n = q.size(-2)
+        mask = torch.triu(torch.ones(n, n, dtype=torch.bool), 1)
+        scores = scores.masked_fill(mask, float("-inf"))
+    weights = scores.softmax(dim=-1)
+    return weights @ v</code></pre>
+  <p>The causal mask sets future positions to minus infinity before the softmax, so their weights become exactly zero.</p>
+</main>
+<script>
+  // render \( \) and \[ \] the way most blogs do
+  for (const p of document.querySelectorAll('main p')) {
+    p.innerHTML = p.innerHTML.replace(/\\\[([\s\S]+?)\\\]/g, (_, t) => katex.renderToString(t, { displayMode: true, throwOnError: false }))
+                             .replace(/\\\(([\s\S]+?)\\\)/g, (_, t) => katex.renderToString(t, { throwOnError: false }));
+  }
+</script>
+</body>
+</html>

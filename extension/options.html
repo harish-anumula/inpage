@@ -1,0 +1,78 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>inpage settings</title>
+<style>
+  :root { color-scheme: light dark; --muted:#71717a; --accent:#6d45c7; --ok:#16a34a; --bad:#dc2626; --border:#d4d4d8; }
+  @media (prefers-color-scheme: dark) { :root { --accent:#b79af4; --border:#3f3f46; --muted:#a1a1aa; } }
+  body { font: 14px/1.55 ui-sans-serif, system-ui, -apple-system, sans-serif; max-width: 36rem; margin: 3rem auto; padding: 0 1rem; }
+  h1 { font-size: 20px; margin-bottom: .2rem; }
+  .lede { color: var(--muted); margin-top: 0; }
+  label { display: block; margin: 1.6rem 0 .4rem; font-weight: 600; }
+  label.check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .choice { gap: 18px; } .choice label.check { margin: 0; font-weight: 500; }
+  label.check input { flex: none; width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+  .row { display: flex; gap: 8px; }
+  input { flex: 1; padding: .6rem .7rem; font: inherit; border: 1px solid var(--border); border-radius: 8px; background: transparent; }
+  button { font: inherit; padding: .55rem .9rem; border-radius: 8px; border: 1px solid var(--border); background: transparent; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  #status { min-height: 1.6em; margin-top: .5rem; }
+  .ok { color: var(--ok); } .bad { color: var(--bad); }
+  p.small, li { color: var(--muted); font-size: 13px; }
+  a { color: var(--accent); }
+  h2 { font-size: 16px; margin: 2.4rem 0 .3rem; }
+  .group { margin-top: 1.2rem; }
+  .group h3 { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: 0 0 .4rem; }
+  .act { border: 1px solid var(--border); border-radius: 10px; padding: 8px; margin-bottom: 6px; }
+  .act.hidden { opacity: .55; }
+  .act .top { display: flex; gap: 6px; align-items: center; }
+  .act .top input.label { font-weight: 600; padding: .35rem .5rem; }
+  .act textarea { display: block; width: 100%; box-sizing: border-box; margin-top: 6px; padding: .45rem .55rem; font: 13px/1.5 inherit; font-family: inherit; color: inherit; border: 1px solid var(--border); border-radius: 8px; background: transparent; resize: vertical; min-height: 2.4em; }
+  .act button, .tools button { padding: .3rem .55rem; font-size: 12.5px; }
+  .act .top button { border-color: transparent; color: var(--muted); padding: .3rem .45rem; }
+  .act .top button:hover { border-color: var(--border); color: inherit; }
+  .act .top button[data-del]:hover { color: var(--bad); }
+  .act textarea { resize: none; overflow: hidden; }
+  .act .tog { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); font-weight: 500; margin: 0 2px; white-space: nowrap; cursor: pointer; }
+  .act .tog input { flex: none; width: 14px; height: 14px; margin: 0; accent-color: var(--accent); }
+  .add { font-size: 12.5px; padding: .3rem .6rem; border-style: dashed; }
+  .tools { margin-top: 1rem; align-items: center; flex-wrap: wrap; }
+  #astatus { margin-left: 6px; }
+</style>
+<h1>inpage settings</h1>
+<p class="lede">Select text on any page to ask about it or rewrite it in place. inpage calls models through OpenRouter with your own key.</p>
+
+<label for="key">OpenRouter API key</label>
+<div class="row"><input id="key" type="password" autocomplete="off" spellcheck="false" placeholder="sk-or-…"><button class="primary" id="save">Save</button><button id="show">Show</button></div>
+<div id="status"></div>
+<p class="small">Get a key at <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>. It is stored only in this browser profile and sent only to OpenRouter. The default model, DeepSeek Flash, costs about $0.0002–0.001 per question or rewrite.</p>
+
+<p class="small">When you ask something, inpage sends your question and the parts of the page needed to answer to OpenRouter, with this key. Nothing else leaves your browser, and what you type into pages' own forms is never sent. <a href="https://github.com/harish-anumula/inpage/blob/main/PRIVACY.md" target="_blank" rel="noopener">Privacy policy</a></p>
+
+<label class="check"><input type="checkbox" id="jev" checked> Fast routing with Jev</label>
+<p class="small">Jev, a fast judgment model (also through OpenRouter, about $0.00003 a call), decides in under half a second whether a page request is a question or a change, turns on web search or careful reasoning when a question needs them, and checks each page once for text that tries to instruct AI assistants. Turn it off to send only what the main model needs.</p>
+
+<label>Where inpage opens</label>
+<div class="row choice"><label class="check"><input type="radio" name="drawer" value="panel" checked> The browser’s side panel</label><label class="check"><input type="radio" name="drawer" value="page"> Inside the page</label></div>
+<p class="small">The side panel makes the page shrink beside it on every site, like the browser’s own panels, and follows you from tab to tab. Inside the page, the drawer slides over the page instead (it pushes simple pages aside). If the browser can’t open its side panel, inpage uses the drawer inside the page.</p>
+
+<label class="check"><input type="checkbox" id="mem-glossary" checked> Remember terms you ask about</label>
+<p class="small">When you ask about a short term, inpage keeps a one-line definition (one tiny extra call). Select that term again on any page and your earlier explanation shows above the toolbar. Your glossary is in All notes.</p>
+<label class="check"><input type="checkbox" id="mem-bookmark" checked> Offer to pick up where you left off</label>
+<p class="small">On long pages you leave part-way through, inpage notes the paragraph you were at (in this browser only) and offers once to take you back.</p>
+
+<label class="check"><input type="checkbox" id="mem-nudges" checked> Quiet suggestions</label>
+<p class="small">If you keep coming back to a paragraph, a small "Stuck? Explain this" appears by it; if you rewind the same part of a lecture twice, "Recap" appears on the player. At most a couple per page, and nothing is sent until you click.</p>
+
+<h2 id="actions">Your actions</h2>
+<p class="small">One-click prompts. Ask and Rewrite actions appear as chips when you select text, and pinned ones (up to three) sit in the selection toolbar itself. You can also make or change them by chatting in the drawer: “make an action that…”.</p>
+<div id="actions-list"></div>
+<div class="row tools"><button id="export">Export…</button><button id="import">Import…</button><input type="file" id="import-file" accept="application/json,.json" hidden><button id="reset">Reset to defaults</button><span id="astatus" class="small" role="status"></span></div>
+
+<label>Using it</label>
+<ul>
+  <li>Select text, then <b>Ask</b> or <b>Rewrite</b>. Alt-click a paragraph to rewrite it, or an image to ask about it.</li>
+  <li>Shortcuts: <b>Alt+Shift+A</b> ask, <b>Alt+Shift+R</b> rewrite (change them at <code>edge://extensions/shortcuts</code> or <code>chrome://extensions/shortcuts</code>).</li>
+  <li>In the composer, <b>⌘↵</b> sends with "think harder". Pick the model from the toolbar button.</li>
+</ul>
+<script src="presets.js"></script>
+<script src="options.js"></script>

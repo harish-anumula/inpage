@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>The story of the attention mechanism</title>
+<style>body{font:18px/1.7 Georgia,serif;max-width:40rem;margin:3rem auto;padding:0 20px;color:#222;background:#fdfcf9}h2{font:650 1.3rem system-ui,sans-serif;margin-top:2.4rem}.pad{height:110vh}</style></head>
+<body>
+<h1>The story of the attention mechanism</h1>
+<h2>1. The bottleneck</h2>
+<p>Early sequence-to-sequence models squeezed a whole sentence into one fixed-length vector. Long sentences lost information, and translation quality fell as sentences grew longer.</p>
+<p>Bahdanau, Cho and Bengio proposed in 2014 that the decoder should look back at every encoder state and weight them by relevance at each step.</p>
+<div class="pad"></div>
+<h2>2. Scoring relevance</h2>
+<p>Each decoder step scores every encoder state, turns the scores into weights with a softmax, and takes the weighted sum as its context vector.</p>
+<p>The weights are learned end to end: no one tells the model which words to align, yet the learned alignments often match human intuition about translation.</p>
+<div class="pad"></div>
+<h2>3. The plot twist</h2>
+<p>In 2017 the Transformer removed recurrence entirely and kept only attention, stacking self-attention layers so every token attends to every other token in parallel.</p>
+<p>The original Transformer was trained on the WMT 2014 English-to-German and English-to-French translation tasks, using eight P100 GPUs.</p>
+<div class="pad"></div>
+</body>
+</html>

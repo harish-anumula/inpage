@@ -1,0 +1,14 @@
+/* Page-level styles, injected as an extension stylesheet so page CSP doesn't block them. */
+::highlight(inpage-thread) { background-color: rgba(124, 92, 230, .20); }
+::highlight(inpage-thread-active) { background-color: rgba(124, 92, 230, .38); }
+[data-inpage-hidden] { display: none !important; }
+[data-inpage-image-thread] { outline: 2px solid rgba(124, 92, 230, .9) !important; outline-offset: 3px; }
+.inpage-flash { animation: inpage-flash 1.8s ease-out 1; border-radius: 4px; }
+@keyframes inpage-flash { from { background-color: rgba(124, 92, 230, .20); } to { background-color: transparent; } }
+@media (prefers-reduced-motion: reduce) { .inpage-flash { animation: none; } }
+/* fact-check verdicts on claims */
+::highlight(inpage-check-supported) { background-color: rgba(22, 163, 74, .14); text-decoration: underline 2px rgba(22, 163, 74, .75); text-underline-offset: 3px; }
+::highlight(inpage-check-disputed) { background-color: rgba(220, 38, 38, .14); text-decoration: underline wavy 1.5px rgba(220, 38, 38, .85); text-underline-offset: 3px; }
+::highlight(inpage-check-unclear) { background-color: rgba(217, 119, 6, .14); text-decoration: underline dotted 2px rgba(217, 119, 6, .85); text-underline-offset: 3px; }
+::highlight(inpage-check-run) { background-color: rgba(124, 92, 230, .10); }
+::highlight(inpage-check-focus) { background-color: rgba(124, 92, 230, .38); }

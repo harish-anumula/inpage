@@ -1,0 +1,32 @@
+{
+  "name": "inpage",
+  "version": "1.0.0",
+  "description": "A learning copilot that lives in the page: ask about anything, rewrite it in place, check the answers. Your own OpenRouter key, no servers.",
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "test": "node scripts/test-all.mjs",
+    "serve:test": "python3 -m http.server 8799 --bind 127.0.0.1 --directory test/pages",
+    "serve:demo": "python3 -m http.server 8800 --bind 127.0.0.1",
+    "package": "node scripts/package.mjs",
+    "icons": "node assets/render-icons.mjs",
+    "images": "node store/render.mjs"
+  },
+  "author": "Harish Reddy Anumula",
+  "license": "MIT",
+  "devDependencies": {
+    "dompurify": "3.4.17",
+    "katex": "0.19.0",
+    "marked": "18.1.1",
+    "playwright": "1.64"
+  },
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harish-anumula/inpage.git"
+  },
+  "bugs": "https://github.com/harish-anumula/inpage/issues",
+  "homepage": "https://github.com/harish-anumula/inpage#readme",
+  "engines": {
+    "node": ">=20"
+  }
+}

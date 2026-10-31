@@ -1,0 +1,107 @@
+{
+  "manifest_version": 3,
+  "name": "inpage",
+  "version": "1.0.0",
+  "description": "Ask about anything on a page, rewrite it in place, check the answers. Lectures, your tabs, your own notes. Uses your OpenRouter key.",
+  "permissions": [
+    "storage",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "inpage",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "options_page": "options.html",
+  "commands": {
+    "ask": {
+      "suggested_key": {
+        "default": "Alt+Shift+A"
+      },
+      "description": "Ask about the selection"
+    },
+    "rewrite": {
+      "suggested_key": {
+        "default": "Alt+Shift+R"
+      },
+      "description": "Rewrite the selection in place"
+    },
+    "panel": {
+      "suggested_key": {
+        "default": "Alt+Shift+I"
+      },
+      "description": "Open or close the inpage drawer"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_idle",
+      "css": [
+        "content.css"
+      ],
+      "js": [
+        "lib/purify.min.js",
+        "lib/marked.min.js",
+        "lib/katex/katex.min.js",
+        "prompts.js",
+        "presets.js",
+        "src/icons.js",
+        "src/render.js",
+        "src/core.js",
+        "src/ui.js",
+        "src/edit.js",
+        "src/threads.js",
+        "src/page.js",
+        "src/check.js",
+        "src/video.js",
+        "src/memory.js",
+        "src/nudges.js",
+        "src/main.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "ui/frame.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ],
+      "use_dynamic_url": true
+    },
+    {
+      "resources": [
+        "lib/katex/*",
+        "lib/katex/fonts/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; frame-src 'none'; media-src 'none'; img-src 'self' data: blob:; base-uri 'none'; form-action 'none'"
+  },
+  "side_panel": {
+    "default_path": "ui/frame.html?panel"
+  }
+}

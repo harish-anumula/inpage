@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Softmax and cross-entropy</title>
+<link rel="stylesheet" href="/katex/katex.min.css">
+<script src="/katex/katex.min.js"></script>
+<script src="/katex/contrib/auto-render.min.js"></script>
+<style>
+  body { font: 18px/1.65 Georgia, serif; color: #1f2328; background: #fbfaf7; max-width: 42rem; margin: 3rem auto; padding: 0 1rem; }
+  h1, h2 { font-family: "Helvetica Neue", Arial, sans-serif; }
+  .note { border-left: 3px solid #b58900; padding-left: .8rem; color: #555; }
+</style>
+</head>
+<body>
+<h1>Softmax and cross-entropy</h1>
+<p>A classifier outputs one score per class, called a logit. The softmax turns logits into probabilities:</p>
+<p id="softmax">\[ p_i = \frac{e^{z_i}}{\sum_j e^{z_j}} \]</p>
+<h2>The loss</h2>
+<p id="ce">With the correct class \(y\), the cross-entropy loss is \(L = -\log p_y\), and its gradient with respect to the logits is \(\frac{\partial L}{\partial z_i} = p_i - \mathbb{1}[i = y]\).</p>
+<p class="note">This gradient is why softmax and cross-entropy are usually fused into one function.</p>
+<script>renderMathInElement(document.body, { delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}] });</script>
+</body>
+</html>

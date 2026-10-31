@@ -1,0 +1,36 @@
+name: Bug
+description: Something is broken or looks wrong.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open en.wikipedia.org/wiki/Softmax_function\n2. Select the first formula, click Rewrite …"
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: A public address where it happens, if you can share one.
+  - type: input
+    id: versions
+    attributes:
+      label: Browser, inpage version and model
+      placeholder: Chrome 156, inpage 1.0.0, DeepSeek V4.1 Flash
+    validations:
+      required: true
+  - type: textarea
+    id: errors
+    attributes:
+      label: Errors
+      description: From the extension's Errors button at chrome://extensions, if there are any.
+      render: text
+  - type: markdown
+    attributes:
+      value: Screenshots help. Please leave out anything private on the page, and never paste your OpenRouter key.

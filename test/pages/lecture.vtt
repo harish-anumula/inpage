@@ -1,0 +1,28 @@
+WEBVTT
+
+00:00.000 --> 00:06.000
+Welcome back. Today we finally get to attention.
+
+00:06.000 --> 00:13.000
+Our bigram model only ever looked at the single previous token to predict the next one.
+
+00:13.000 --> 00:20.000
+That throws away everything earlier in the context, which is a lot of information.
+
+00:20.000 --> 00:27.000
+Self-attention lets every token look back at all the earlier tokens and decide how much each one matters.
+
+00:27.000 --> 00:34.000
+We compute the weights as a softmax of queries dotted with keys, scaled by one over the square root of the head size.
+
+00:34.000 --> 00:40.000
+The scaling keeps the softmax from saturating when the head size gets large.
+
+00:40.000 --> 00:47.000
+In code, we multiply q by k transposed and scale it, then mask out the future with the lower triangular matrix.
+
+00:47.000 --> 00:54.000
+Filling the masked positions with minus infinity makes their softmax weight exactly zero.
+
+00:54.000 --> 01:00.000
+Then the softmax over the last dimension gives each row weights that sum to one.
